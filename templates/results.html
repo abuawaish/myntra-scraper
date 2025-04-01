@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results | Myntra Scraper</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        .results-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            color: #ff3f6c;
+            font-weight: bold;
+        }
+        .table {
+            background-color: white;
+        }
+        .back-btn {
+            background-color: #ff3f6c;
+            border-color: #ff3f6c;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background-color: #e6395c;
+            border-color: #e6395c;
+        }
+        .discount-cell {
+            color: #ff3f6c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="results-header">
+            <h2 class="logo"><i class="bi bi-table"></i> Myntra Product Scraper</h2>
+            <h4>Scraped Products Results</h4>
+            <p class="text-muted">{{ products|length }} products found</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Brand</th>
+                        <th>Product</th>
+                        <th>Rating</th>
+                        <th>Total Ratings</th>
+                        <th>Price (₹)</th>
+                        <th>Discount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product['Brand'] }}</td>
+                        <td>{{ product['Product'] }}</td>
+                        <td>{{ product['Rating'] }}</td>
+                        <td>{{ product['Total Ratings'] }}</td>
+                        <td>{{ product['Price (₹)'] }}</td>
+                        <td class="discount-cell">{{ product['Discount'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <a href="/" class="btn btn-primary back-btn">
+                <i class="bi bi-arrow-left"></i> Search Again
+            </a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
