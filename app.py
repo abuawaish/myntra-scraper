@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, send_file, render_template, request, redirect, url_for, jsonify
 import pandas as pd
 import time
 import threading
+from io import BytesIO
 from typing import List, Dict, Any, Optional
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -37,6 +38,28 @@ def reset_scraping_status() -> None:
 def configure_driver() -> webdriver.Chrome:
     """Configures and returns a headless Chrome WebDriver."""
     return webdriver.Chrome()
+
+def save_to_csv(data):
+    csv_buffer = BytesIO()
+    df = pd.DataFrame(data)
+    df.to_csv(csv_buffer, index=False) #type: ignore
+    csv_buffer.seek(0)
+    return csv_buffer
+
+
+@app.route('/download_csv')
+def download_csv():
+    """Route for downloading CSV file"""
+    if not scraping_status['data']:
+        return redirect(url_for('index'))
+
+    csv_buffer = save_to_csv(scraping_status['data'])
+    return send_file(
+        csv_buffer,
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name='myntra_products.csv'
+    )
 
 def get_product_urls(driver: webdriver.Chrome, keyword: str, max_pages: int = 3) -> List[str]:
     """Fetches product URLs from Myntra search results."""
@@ -171,7 +194,8 @@ def get_progress():
 def results():
     if not scraping_status['is_complete'] or not scraping_status['data']:
         return redirect(url_for('index'))
-    return render_template('results.html', products=scraping_status['data'])
+    data = scraping_status['data']
+    return render_template('results.html', products=data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

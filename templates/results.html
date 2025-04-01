@@ -39,14 +39,30 @@
             color: #ff3f6c;
             font-weight: bold;
         }
+        .download-btn {
+            background-color: #28a745;
+            border-color: #28a745;
+            margin-left: 10px;
+        }
+        .download-btn:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="results-header">
-            <h2 class="logo"><i class="bi bi-table"></i> Myntra Product Scraper</h2>
-            <h4>Scraped Products Results</h4>
-            <p class="text-muted">{{ products|length }} products found</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="logo"><i class="bi bi-table"></i> Myntra Product Scraper</h2>
+                    <h4>Scraped Products Results</h4>
+                    <p class="text-muted">{{ products|length }} products found</p>
+                </div>
+                <a href="/download_csv" class="btn download-btn">
+                    <i class="bi bi-download"></i> Download CSV
+                </a>
+            </div>
         </div>
 
         <div class="table-responsive">
@@ -82,6 +98,7 @@
             </a>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
