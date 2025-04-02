@@ -1,9 +1,13 @@
 from flask import Flask, send_file, render_template, request, redirect, url_for, jsonify
 import pandas as pd
 import time
+import platform
 import threading
 from io import BytesIO
 from typing import List, Dict, Any, Optional
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -37,7 +41,20 @@ def reset_scraping_status() -> None:
 
 def configure_driver() -> webdriver.Chrome:
     """Configures and returns a headless Chrome WebDriver."""
-    return webdriver.Chrome()
+    options = Options()
+    options.headless = True  # Enable headless mode
+    options.add_argument("--disable-gpu")  # Necessary for headless mode on Windows
+    options.add_argument("--no-sandbox")  # Bypass OS security model
+    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource issues
+    options.add_argument("--remote-debugging-port=9222")  # Required for Android
+
+    # Android Compatibility
+    if "android" in platform.system().lower():
+        options.add_argument("--user-agent=Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.88 Mobile Safari/537.36")
+
+    # Initialize WebDriver with headless options
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    return driver
 
 def save_to_csv(data):
     csv_buffer = BytesIO()
